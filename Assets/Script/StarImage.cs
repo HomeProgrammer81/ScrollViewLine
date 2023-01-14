@@ -25,8 +25,7 @@ namespace Assets.Script
                 new LineCord(167,246),
                 new LineCord(58,246),
                 new LineCord(146,183),
-                new LineCord(112,79),
-                new LineCord(200,143)
+                new LineCord(112,79)
             });
 
         private int StarLineWidth = 5;
@@ -94,7 +93,7 @@ namespace Assets.Script
             Color lineColor = new Color(0, 0, 0, 100);
 
             // ラインのドットに黒を設定する
-            List<Tuple<int, int>> list = StarLineCords.CreateLineDotList(StarLineWidth);
+            List<Tuple<int, int>> list = StarLineCords.CreateLineDotListCircle(StarLineWidth);
             foreach (Tuple<int, int> dot in list)
             {
                 lineTexture.SetPixel(dot.Item1, dot.Item2, lineColor);

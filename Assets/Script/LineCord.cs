@@ -1,40 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
 namespace Assets.Script
 {
-    internal class LineCords
-    {
-        private List<LineCord> list = new List<LineCord>();
-
-        public LineCords(List<LineCord> list )
-        {
-            this.list = list;
-        }
-
-        public List<Tuple<int, int>> CreateLineDotList( int width )
-        {
-            if(list.Count <= 1)
-            {
-                return new List<Tuple<int, int>>();
-            }
-
-            List<Tuple<int, int>> dstList = new List<Tuple<int, int>>();
-
-            for( int i=1; i<list.Count; i++)
-            {
-                LineCord startCord = list[i - 1];
-                LineCord endCord = list[i];
-                dstList.AddRange(LineCord.CreateLineDotList(startCord, endCord, width));
-            }
-
-            return dstList;
-        }
-    }
-
+    /// <summary>
+    /// ライン座標
+    /// </summary>
     internal class LineCord
     {
         private int x;
@@ -46,6 +17,24 @@ namespace Assets.Script
             this.y = y;
         }
 
+        public override bool Equals(object obj)
+        {
+            LineCord other = obj as LineCord;
+            return other.x == x && other.y == y;
+        }
+
+        public override int GetHashCode()
+        {
+            return x^y;
+        }
+
+        /// <summary>
+        /// ラインドット一覧を生成する
+        /// </summary>
+        /// <param name="sCord">点1</param>
+        /// <param name="eCord">点2</param>
+        /// <param name="width">幅</param>
+        /// <returns>ラインドット一覧</returns>
         public static List<Tuple<int, int>> CreateLineDotList( LineCord sCord, LineCord eCord, int width)
         {
             List<Tuple<int, int>> dstList = new List<Tuple<int, int>>();
@@ -98,51 +87,6 @@ namespace Assets.Script
                 }
             }
             return dstList;
-        }
-
-        private class CircleDots
-        {
-            List<Tuple<int, int>> list;
-
-            public CircleDots(List<Tuple<int, int>> list)
-            {
-                this.list = list;
-            }
-
-            public List<Tuple<int, int>> MoveCircleDots(int x, int y)
-            {
-                List<Tuple<int, int>> dst = list.Select(dot =>
-                {
-                    int dx = dot.Item1 + x;
-                    int dy = dot.Item2 + y;
-
-                    return new Tuple<int, int>(dx, dy);
-                }).ToList();
-                return dst;
-            }
-        }
-
-        private class CircleDotsFactory
-        {
-            public CircleDots Create(int width)
-            {
-                List<Tuple<int, int>> dst = new List<Tuple<int, int>>();
-
-                // 半径
-                int r = width / 2;
-
-                for (int y = -r; y <= r; y++)
-                {
-                    for (int x = -r; x <= r; x++)
-                    {
-                        if (x * x + y * y <= r * r)
-                        {
-                            dst.Add(new Tuple<int, int>(x, y));
-                        }
-                    }
-                }
-                return new CircleDots(dst);
-            }
         }
     }
 }
